@@ -37,7 +37,6 @@
   <ItemGroup>
     <TypeScriptCompile Include="Web Files\class_GameEngine.ts" />
     <TypeScriptCompile Include="Web Files\Main.ts" />
-    <TypeScriptCompile Include="Web Files\Utility.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>

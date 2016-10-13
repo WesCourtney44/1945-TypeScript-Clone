@@ -6,17 +6,19 @@ class GameEngine {
         this.start = () => {
             this._isRunning = true;
             this.game.onStart();
-            this.previousTime = Util.nowInSeconds();
-            let self = this;
-            let loop = () => {
-                let currentTime = Util.nowInSeconds();
-                let deltaValue = currentTime - self.previousTime;
-                self.previousTime = Util.nowInSeconds();
-                self.game.step(new Delta(deltaValue));
-                self.game.draw();
-                window.requestAnimationFrame(loop);
-            };
-            loop();
+            this.previousTime = Date.now();
+            this.loop();
+        };
+        this.loop = () => {
+            let currentTime = Date.now();
+            let deltaValue = currentTime - this.previousTime;
+            deltaValue = (deltaValue < 0) ? 0 : deltaValue;
+            this.previousTime = Date.now();
+            this.game.step(new Delta(deltaValue));
+            this.game.draw();
+            if (this.isRunning) {
+                window.requestAnimationFrame(this.loop);
+            }
         };
         this.stop = () => {
             this._isRunning = false;
@@ -27,10 +29,17 @@ class GameEngine {
     }
 }
 class Delta {
-    constructor(seconds) {
-        this.seconds = seconds;
+    constructor(milliseconds) {
+        this._milliseconds = milliseconds;
+        this._seconds = milliseconds / 1000;
     }
     apply(unitsPerSecond) {
         return this.seconds * unitsPerSecond;
+    }
+    get milliseconds() {
+        return this._milliseconds;
+    }
+    get seconds() {
+        return this._seconds;
     }
 }
