@@ -1,3 +1,18 @@
+class Delta {
+    constructor(milliseconds) {
+        this._milliseconds = milliseconds;
+        this._seconds = milliseconds / 1000;
+    }
+    apply(unitsPerSecond) {
+        return this.seconds * unitsPerSecond;
+    }
+    get milliseconds() {
+        return this._milliseconds;
+    }
+    get seconds() {
+        return this._seconds;
+    }
+}
 class GameEngine {
     constructor(game) {
         this.game = game;
@@ -26,21 +41,6 @@ class GameEngine {
     }
     get isRunning() {
         return this._isRunning;
-    }
-}
-class Delta {
-    constructor(milliseconds) {
-        this._milliseconds = milliseconds;
-        this._seconds = milliseconds / 1000;
-    }
-    apply(unitsPerSecond) {
-        return this.seconds * unitsPerSecond;
-    }
-    get milliseconds() {
-        return this._milliseconds;
-    }
-    get seconds() {
-        return this._seconds;
     }
 }
 class Main {
