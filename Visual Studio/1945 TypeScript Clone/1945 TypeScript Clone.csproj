@@ -39,6 +39,7 @@
     <TypeScriptCompile Include="TypeScript\class_Delta.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="TypeScript\class_Game1945.ts" />
     <TypeScriptCompile Include="TypeScript\class_GameEngine.ts" />
     <TypeScriptCompile Include="TypeScript\class_Main.ts" />
     <TypeScriptCompile Include="TypeScript\interface_IGame.ts">

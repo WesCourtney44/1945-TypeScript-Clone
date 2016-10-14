@@ -13,6 +13,29 @@ class Delta {
         return this._seconds;
     }
 }
+class Game1945 {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.onStart = () => { };
+        this.onStop = () => { };
+        this.step = (delta) => {
+            this.count++;
+            this.seconds += delta.apply(1);
+            // console.log("delta: " + delta.seconds);
+        };
+        this.draw = () => {
+            let context = this.canvas.getContext("2d");
+            context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            context.beginPath();
+            context.arc(95, 50, 60, 0, 2 * Math.PI);
+            context.stroke();
+            context.fillText("Count: " + this.count, 32, 32);
+            context.fillText("Seconds: " + Math.floor(this.seconds), 32, 64);
+        };
+        this.count = 0;
+        this.seconds = 0;
+    }
+}
 class GameEngine {
     constructor(game) {
         this.game = game;
@@ -42,32 +65,13 @@ class GameEngine {
     get isRunning() {
         return this._isRunning;
     }
+    ;
 }
 class Main {
     static main() {
-        let c = document.getElementById("myCanvas");
-        let ctx = c.getContext("2d");
-        ctx.beginPath();
-        ctx.arc(95, 50, 60, 0, 2 * Math.PI);
-        ctx.stroke();
-        //Uncomment the code below to test GameEngine
-        //count is incremented on every update
-        //seconds uses the delta to increment by 1 every second.
-        let count = 0;
-        let seconds = 0;
-        (new GameEngine({
-            onStart: () => { },
-            step: (delta) => {
-                count++;
-                seconds += delta.apply(1);
-                //console.log("delta: " + delta.seconds);
-            },
-            draw: () => {
-                ctx.clearRect(0, 0, c.width, c.height);
-                ctx.fillText("Count: " + count, 32, 32);
-                ctx.fillText("Seconds: " + Math.floor(seconds), 32, 64);
-            },
-            onStop: () => { }
-        })).start();
+        let canvas = document.getElementById("myCanvas");
+        let game = new Game1945(canvas);
+        let engine = new GameEngine(game);
+        engine.start();
     }
 }

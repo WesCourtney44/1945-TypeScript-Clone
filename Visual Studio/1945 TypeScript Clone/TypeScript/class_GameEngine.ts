@@ -7,18 +7,18 @@
 
     public get isRunning(): boolean {
         return this._isRunning;
-    }
+    };
 
     public start = () => {
         this._isRunning = true;
         this.game.onStart();
         this.previousTime = Date.now();
         this.loop();
-    }
+    };
 
     private loop = () => {
-        let currentTime = Date.now();
-        let deltaValue = currentTime - this.previousTime;
+        let currentTime: number = Date.now();
+        let deltaValue: number = currentTime - this.previousTime;
         deltaValue = (deltaValue < 0) ? 0 : deltaValue;
         this.previousTime = Date.now();
         this.game.step(new Delta(deltaValue));
@@ -26,9 +26,9 @@
         if (this.isRunning) {
             window.requestAnimationFrame(this.loop);
         }
-    }
+    };
 
     public stop = () => {
         this._isRunning = false;
-    }
+    };
 }
