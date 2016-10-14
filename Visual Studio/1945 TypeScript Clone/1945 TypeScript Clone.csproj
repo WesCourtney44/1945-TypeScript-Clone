@@ -36,10 +36,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="TypeScript\class_Delta.ts" />
+    <TypeScriptCompile Include="TypeScript\class_Delta.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="TypeScript\class_GameEngine.ts" />
     <TypeScriptCompile Include="TypeScript\class_Main.ts" />
-    <TypeScriptCompile Include="TypeScript\interface_IGame.ts" />
+    <TypeScriptCompile Include="TypeScript\interface_IGame.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
