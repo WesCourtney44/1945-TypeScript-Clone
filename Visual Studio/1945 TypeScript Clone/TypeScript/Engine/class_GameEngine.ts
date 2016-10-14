@@ -7,7 +7,7 @@
 
     public get isRunning(): boolean {
         return this._isRunning;
-    };
+    }
 
     public start = () => {
         this._isRunning = true;
