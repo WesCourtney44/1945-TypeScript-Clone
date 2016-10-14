@@ -1,8 +1,4 @@
-﻿window.onload = function () {
-    Main.main();
-};
-
-class Main {
+﻿class Main {
     public static main(): void {
         let c: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("myCanvas");
         let ctx: CanvasRenderingContext2D = c.getContext("2d");
