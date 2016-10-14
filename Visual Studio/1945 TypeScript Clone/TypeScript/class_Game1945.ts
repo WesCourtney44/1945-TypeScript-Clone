@@ -2,10 +2,12 @@
 
     private count: number;
     private seconds: number;
+    private clockSpeed: UnitsPerSecond;
 
     constructor(private canvas: HTMLCanvasElement) {
         this.count = 0;
         this.seconds = 0;
+        this.clockSpeed = new UnitsPerSecond(1);
     }
 
     public onStart = () => { /* Do Nothing */ };
@@ -13,8 +15,7 @@
 
     public step = (delta: Delta) => {
         this.count++;
-        this.seconds += delta.apply(1);
-        // console.log("delta: " + delta.seconds);
+        this.seconds += this.clockSpeed.apply(delta);
     };
 
     public draw = () => {

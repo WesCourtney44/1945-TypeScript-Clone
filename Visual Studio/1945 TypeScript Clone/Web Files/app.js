@@ -20,8 +20,7 @@ class Game1945 {
         this.onStop = () => { };
         this.step = (delta) => {
             this.count++;
-            this.seconds += delta.apply(1);
-            // console.log("delta: " + delta.seconds);
+            this.seconds += this.clockSpeed.apply(delta);
         };
         this.draw = () => {
             let context = this.canvas.getContext("2d");
@@ -34,6 +33,7 @@ class Game1945 {
         };
         this.count = 0;
         this.seconds = 0;
+        this.clockSpeed = new UnitsPerSecond(1);
     }
 }
 class GameEngine {
@@ -73,5 +73,16 @@ class Main {
         let game = new Game1945(canvas);
         let engine = new GameEngine(game);
         engine.start();
+    }
+}
+class UnitsPerSecond {
+    constructor(units, seconds = 1) {
+        this._value = units / seconds;
+    }
+    get value() {
+        return this._value;
+    }
+    apply(delta) {
+        return delta.apply(this.value);
     }
 }

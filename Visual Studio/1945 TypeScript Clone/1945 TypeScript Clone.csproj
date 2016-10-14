@@ -42,6 +42,7 @@
     <TypeScriptCompile Include="TypeScript\class_Game1945.ts" />
     <TypeScriptCompile Include="TypeScript\class_GameEngine.ts" />
     <TypeScriptCompile Include="TypeScript\class_Main.ts" />
+    <TypeScriptCompile Include="TypeScript\class_UnitsPerSecond.ts" />
     <TypeScriptCompile Include="TypeScript\interface_IGame.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
