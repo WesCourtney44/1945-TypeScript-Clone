@@ -1,22 +1,27 @@
 ﻿class GameEngine {
 
-    private _isRunning: boolean = false;
-    private previousTime: number = 0;
+    private _isRunning: boolean;
+    private previousTime: number;
+    private game: IGame;
 
-    constructor(private game: IGame) { }
+    constructor(private argGame: IGame) {
+        this._isRunning = false;
+        this.game = argGame;
+        this.previousTime = 0;
+    }
 
     public get isRunning(): boolean {
         return this._isRunning;
     }
 
-    public start = () => {
+    public start(): void {
         this._isRunning = true;
         this.game.onStart();
         this.previousTime = Date.now();
         this.loop();
-    };
+    }
 
-    private loop = () => {
+    private loop(): void {
         let currentTime: number = Date.now();
         let deltaValue: number = currentTime - this.previousTime;
         deltaValue = (deltaValue < 0) ? 0 : deltaValue;
@@ -24,11 +29,13 @@
         this.game.step(new Delta(deltaValue));
         this.game.draw();
         if (this.isRunning) {
-            window.requestAnimationFrame(this.loop);
+            // wrapping the call to this.loop() in a closure
+            // to protect it from using the wrong "this".
+            window.requestAnimationFrame(() => { this.loop(); });
         }
-    };
+    }
 
-    public stop = () => {
+    public stop(): void {
         this._isRunning = false;
-    };
+    }
 }

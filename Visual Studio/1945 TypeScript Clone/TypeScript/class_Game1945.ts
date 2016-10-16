@@ -10,15 +10,15 @@
         this.clockSpeed = new UnitsPerSecond(1);
     }
 
-    public onStart = () => { /* Do Nothing */ };
-    public onStop = () => { /* Do Nothing */ };
+    public onStart(): void { /* Do Nothing */ }
+    public onStop(): void { /* Do Nothing */ }
 
-    public step = (delta: Delta) => {
+    public step(delta: Delta): void {
         this.frames++;
         this.seconds += this.clockSpeed.apply(delta);
-    };
+    }
 
-    public draw = () => {
+    public draw(): void {
         let context: CanvasRenderingContext2D = this.canvas.getContext("2d");
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         context.beginPath();
@@ -27,5 +27,5 @@
         context.fillText("Frames: " + this.frames, 48, 32);
         context.fillText("Seconds: " + Math.floor(this.seconds), 48, 48);
         context.fillText("FPS: " + Math.floor(this.frames / this.seconds), 48, 64);
-    };
+    }
 }
