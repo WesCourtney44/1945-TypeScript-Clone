@@ -40,6 +40,7 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="TypeScript\class_Game1945.ts" />
+    <TypeScriptCompile Include="TypeScript\Engine\class_EventBus.ts" />
     <TypeScriptCompile Include="TypeScript\Engine\class_GameEngine.ts" />
     <TypeScriptCompile Include="TypeScript\class_Main.ts" />
     <TypeScriptCompile Include="TypeScript\Engine\class_UnitsPerSecond.ts" />
@@ -79,9 +80,8 @@
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
-    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
-    <TypeScriptModuleKind>
-    </TypeScriptModuleKind>
+    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>None</TypeScriptModuleKind>
     <TypeScriptOutFile>Web Files/app.js</TypeScriptOutFile>
     <TypeScriptOutDir />
     <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
