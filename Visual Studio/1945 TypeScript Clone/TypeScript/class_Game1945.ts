@@ -1,21 +1,15 @@
 ﻿class Game1945 implements IGame {
-
-    private frames: number;
-    private seconds: number;
-    private clockSpeed: UnitsPerSecond;
-    private eventBus: EventBus;
-    private coords: { x: number, y: number };
+    private frames: number = 0;
+    private seconds: number = 0;
+    private clockSpeed: UnitsPerSecond = new UnitsPerSecond(1);
+    private eventBus: EventBus = new EventBus();
+    private coords: { x: number, y: number } = { x: 64, y: 64 };
 
     constructor(private canvas: HTMLCanvasElement) {
-        this.frames = 0;
-        this.seconds = 0;
-        this.clockSpeed = new UnitsPerSecond(1);
-        this.eventBus = new EventBus();
-        this.coords = { x: 64, y: 64 };
-        this.eventBus.doOnKeyDown(Key.UP, () => {
+        this.eventBus.eventKeyDown(KeyCode.UP_ARROW, () => {
             this.coords.y -= 4;
         });
-        this.eventBus.doOnKeyDown(Key.DOWN, () => {
+        this.eventBus.eventKeyDown(KeyCode.DOWN_ARROW, () => {
             this.coords.y += 4;
 
         });

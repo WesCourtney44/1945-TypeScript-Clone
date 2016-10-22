@@ -1,37 +1,41 @@
 ﻿class EventBus {
-    private keyDownMap: ActionListMap;
+    private readonly keyDownMap: ActionListMap = [];
+    private readonly keyUpMap: ActionListMap = [];
+    private readonly key: KeyStateHandler = new KeyStateHandler();
 
     constructor() {
-        this.keyDownMap = [];
-        document.addEventListener("keydown", this.handleKeyDown);
+        // give KEY PRESS listener to document
+        document.addEventListener("keydown", (event: KeyboardEvent) => {
+            let keyCode: KeyCode = event.keyCode;
+            if (this.key.isUp(keyCode)) {
+                this.key.press(keyCode);
+                this.handleActionList(this.keyDownMap[keyCode]);
+            }
+        });
+        // give KEY RELEASE listener to document
+        document.addEventListener("keyup", (event: KeyboardEvent) => {
+            let keyCode: KeyCode = event.keyCode;
+            if (!this.key.isUp(keyCode)) {
+                this.key.release(keyCode);
+                this.handleActionList(this.keyUpMap[keyCode]);
+            }
+        });
     }
 
-    // this is not a method, this is a closure should that never be called directly!
-    private handleKeyDown = (event: KeyboardEvent) => {
-        let list: ActionList = this.keyDownMap[event.keyCode];
-        if (list !== undefined) {
+    private handleActionList(list?: ActionList): void {
+        if (list) {
             for (let action of list) {
                 action();
             }
         }
-    };
-
-    public doOnKeyDown(key: Key, action: () => void): void {
-        let map: ActionListMap = this.keyDownMap;
-        if (map[key] === undefined) {
-            map[key] = [];
-        }
-        map[key].push(action);
     }
-}
 
-type Action = () => void;
-type ActionList = Action[];
-type ActionListMap = ActionList[];
+    public eventKeyDown(keyCode: KeyCode, action: Action): void {
+        let map: ActionListMap = this.keyDownMap;
+        if (!map[keyCode]) {
+            map[keyCode] = [];
+        }
+        map[keyCode].push(action);
+    }
 
-enum Key {
-    LEFT = 37,
-    UP = 38,
-    RIGHT = 39,
-    DOWN = 40
 }

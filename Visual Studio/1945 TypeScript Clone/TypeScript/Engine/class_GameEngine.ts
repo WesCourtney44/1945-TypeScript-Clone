@@ -1,13 +1,10 @@
 ﻿class GameEngine {
+    private readonly game: IGame;
+    private _isRunning: boolean = false;
+    private previousTime: number = 0;
 
-    private _isRunning: boolean;
-    private previousTime: number;
-    private game: IGame;
-
-    constructor(private argGame: IGame) {
-        this._isRunning = false;
-        this.game = argGame;
-        this.previousTime = 0;
+    constructor(game: IGame) {
+        this.game = game;
     }
 
     public get isRunning(): boolean {

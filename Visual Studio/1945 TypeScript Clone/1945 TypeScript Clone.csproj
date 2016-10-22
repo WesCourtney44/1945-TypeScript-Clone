@@ -10,7 +10,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.0</TypeScriptToolsVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -43,10 +43,13 @@
     <TypeScriptCompile Include="TypeScript\Engine\class_EventBus.ts" />
     <TypeScriptCompile Include="TypeScript\Engine\class_GameEngine.ts" />
     <TypeScriptCompile Include="TypeScript\class_Main.ts" />
+    <TypeScriptCompile Include="TypeScript\Engine\class_KeyStateHandler.ts" />
     <TypeScriptCompile Include="TypeScript\Engine\class_UnitsPerSecond.ts" />
+    <TypeScriptCompile Include="TypeScript\Engine\enum_Key.ts" />
     <TypeScriptCompile Include="TypeScript\Engine\interface_IGame.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="TypeScript\Engine\Types.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>

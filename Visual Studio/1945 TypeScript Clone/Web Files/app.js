@@ -1,25 +1,11 @@
 var Delta = (function () {
     function Delta(milliseconds) {
-        this._milliseconds = milliseconds;
-        this._seconds = milliseconds / 1000;
+        this.milliseconds = milliseconds;
+        this.seconds = milliseconds / 1000;
     }
     Delta.prototype.apply = function (unitsPerSecond) {
         return this.seconds * unitsPerSecond;
     };
-    Object.defineProperty(Delta.prototype, "milliseconds", {
-        get: function () {
-            return this._milliseconds;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Delta.prototype, "seconds", {
-        get: function () {
-            return this._seconds;
-        },
-        enumerable: true,
-        configurable: true
-    });
     return Delta;
 }());
 var Game1945 = (function () {
@@ -31,10 +17,10 @@ var Game1945 = (function () {
         this.clockSpeed = new UnitsPerSecond(1);
         this.eventBus = new EventBus();
         this.coords = { x: 64, y: 64 };
-        this.eventBus.doOnKeyDown(Key.UP, function () {
+        this.eventBus.eventKeyDown(KeyCode.UP_ARROW, function () {
             _this.coords.y -= 4;
         });
-        this.eventBus.doOnKeyDown(Key.DOWN, function () {
+        this.eventBus.eventKeyDown(KeyCode.DOWN_ARROW, function () {
             _this.coords.y += 4;
         });
     }
@@ -62,41 +48,48 @@ var Game1945 = (function () {
 var EventBus = (function () {
     function EventBus() {
         var _this = this;
-        // this is not a method, this is a closure should that never be called directly!
-        this.handleKeyDown = function (event) {
-            var list = _this.keyDownMap[event.keyCode];
-            if (list !== undefined) {
-                for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
-                    var action = list_1[_i];
-                    action();
-                }
-            }
-        };
         this.keyDownMap = [];
-        document.addEventListener("keydown", this.handleKeyDown);
+        this.keyUpMap = [];
+        this.key = new KeyStateHandler();
+        // give KEY PRESS listener to document
+        document.addEventListener("keydown", function (event) {
+            var keyCode = event.keyCode;
+            if (_this.key.isUp(keyCode)) {
+                _this.key.press(keyCode);
+                _this.handleActionList(_this.keyDownMap[keyCode]);
+            }
+        });
+        // give KEY RELEASE listener to document
+        document.addEventListener("keyup", function (event) {
+            var keyCode = event.keyCode;
+            if (!_this.key.isUp(keyCode)) {
+                _this.key.release(keyCode);
+                _this.handleActionList(_this.keyUpMap[keyCode]);
+            }
+        });
     }
-    EventBus.prototype.doOnKeyDown = function (key, action) {
-        var map = this.keyDownMap;
-        if (map[key] === undefined) {
-            map[key] = [];
+    EventBus.prototype.handleActionList = function (list) {
+        if (list) {
+            for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
+                var action = list_1[_i];
+                action();
+            }
         }
-        map[key].push(action);
+    };
+    EventBus.prototype.eventKeyDown = function (keyCode, action) {
+        var map = this.keyDownMap;
+        if (!map[keyCode]) {
+            map[keyCode] = [];
+        }
+        map[keyCode].push(action);
     };
     return EventBus;
 }());
-var Key;
-(function (Key) {
-    Key[Key["LEFT"] = 37] = "LEFT";
-    Key[Key["UP"] = 38] = "UP";
-    Key[Key["RIGHT"] = 39] = "RIGHT";
-    Key[Key["DOWN"] = 40] = "DOWN";
-})(Key || (Key = {}));
 var GameEngine = (function () {
-    function GameEngine(argGame) {
-        this.argGame = argGame;
+    function GameEngine(game) {
         this._isRunning = false;
-        this.game = argGame;
         this.previousTime = 0;
+        this.game = game;
     }
     Object.defineProperty(GameEngine.prototype, "isRunning", {
         get: function () {
@@ -141,20 +134,41 @@ var Main = (function () {
     };
     return Main;
 }());
+var KeyStateHandler = (function () {
+    function KeyStateHandler() {
+        this._keyState = [];
+    }
+    KeyStateHandler.prototype.getState = function (key) {
+        if (!this._keyState[key]) {
+            this._keyState[key] = "up";
+        }
+        return this._keyState[key];
+    };
+    KeyStateHandler.prototype.isUp = function (key) {
+        return this.getState(key) === "up";
+    };
+    KeyStateHandler.prototype.press = function (key) {
+        this._keyState[key] = "down";
+    };
+    KeyStateHandler.prototype.release = function (key) {
+        this._keyState[key] = "up";
+    };
+    return KeyStateHandler;
+}());
 var UnitsPerSecond = (function () {
     function UnitsPerSecond(units, seconds) {
         if (seconds === void 0) { seconds = 1; }
-        this._value = units / seconds;
+        this.value = units / seconds;
     }
-    Object.defineProperty(UnitsPerSecond.prototype, "value", {
-        get: function () {
-            return this._value;
-        },
-        enumerable: true,
-        configurable: true
-    });
     UnitsPerSecond.prototype.apply = function (delta) {
         return delta.apply(this.value);
     };
     return UnitsPerSecond;
 }());
+var KeyCode;
+(function (KeyCode) {
+    KeyCode[KeyCode["LEFT_ARROW"] = 37] = "LEFT_ARROW";
+    KeyCode[KeyCode["UP_ARROW"] = 38] = "UP_ARROW";
+    KeyCode[KeyCode["RIGHT_ARROW"] = 39] = "RIGHT_ARROW";
+    KeyCode[KeyCode["DOWN_ARROW"] = 40] = "DOWN_ARROW";
+})(KeyCode || (KeyCode = {}));
