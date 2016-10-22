@@ -1,13 +1,3 @@
-var Delta = (function () {
-    function Delta(milliseconds) {
-        this.milliseconds = milliseconds;
-        this.seconds = milliseconds / 1000;
-    }
-    Delta.prototype.apply = function (unitsPerSecond) {
-        return this.seconds * unitsPerSecond;
-    };
-    return Delta;
-}());
 var Game1945 = (function () {
     function Game1945(canvas) {
         var _this = this;
@@ -44,6 +34,27 @@ var Game1945 = (function () {
         context.fillText("FPS: " + Math.floor(this.frames / this.seconds), 48, 64);
     };
     return Game1945;
+}());
+var Main = (function () {
+    function Main() {
+    }
+    Main.main = function () {
+        var canvas = document.getElementById("myCanvas");
+        var game = new Game1945(canvas);
+        var engine = new GameEngine(game);
+        engine.start();
+    };
+    return Main;
+}());
+var Delta = (function () {
+    function Delta(milliseconds) {
+        this.milliseconds = milliseconds;
+        this.seconds = milliseconds / 1000;
+    }
+    Delta.prototype.apply = function (unitsPerSecond) {
+        return this.seconds * unitsPerSecond;
+    };
+    return Delta;
 }());
 var EventBus = (function () {
     function EventBus() {
@@ -122,17 +133,6 @@ var GameEngine = (function () {
         this._isRunning = false;
     };
     return GameEngine;
-}());
-var Main = (function () {
-    function Main() {
-    }
-    Main.main = function () {
-        var canvas = document.getElementById("myCanvas");
-        var game = new Game1945(canvas);
-        var engine = new GameEngine(game);
-        engine.start();
-    };
-    return Main;
 }());
 var KeyStateHandler = (function () {
     function KeyStateHandler() {
