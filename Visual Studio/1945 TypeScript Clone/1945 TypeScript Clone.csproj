@@ -46,7 +46,7 @@
     <TypeScriptCompile Include="TypeScript\Engine\class_KeyStateHandler.ts" />
     <TypeScriptCompile Include="TypeScript\Engine\class_UnitsPerSecond.ts" />
     <TypeScriptCompile Include="TypeScript\Engine\enum_Key.ts" />
-    <TypeScriptCompile Include="TypeScript\Engine\interface_IGame.ts">
+    <TypeScriptCompile Include="TypeScript\Engine\interface_Game.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="TypeScript\Engine\Types.ts" />

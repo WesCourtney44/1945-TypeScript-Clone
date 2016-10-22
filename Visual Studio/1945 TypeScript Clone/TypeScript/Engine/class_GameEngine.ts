@@ -1,9 +1,9 @@
 ﻿class GameEngine {
-    private readonly game: IGame;
+    private readonly game: Game;
     private _isRunning: boolean = false;
     private previousTime: number = 0;
 
-    constructor(game: IGame) {
+    constructor(game: Game) {
         this.game = game;
     }
 

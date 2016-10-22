@@ -1,4 +1,4 @@
-﻿class Game1945 implements IGame {
+﻿class Game1945 implements Game {
     private frames: number = 0;
     private seconds: number = 0;
     private clockSpeed: UnitsPerSecond = new UnitsPerSecond(1);
