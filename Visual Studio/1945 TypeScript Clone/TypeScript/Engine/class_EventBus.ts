@@ -1,6 +1,6 @@
 ﻿class EventBus {
-    private readonly keyDownMap: ActionListMap = [];
-    private readonly keyUpMap: ActionListMap = [];
+    private readonly keyPressMap: ActionListMap = [];
+    private readonly keyReleaseMap: ActionListMap = [];
     private readonly key: KeyStateHandler = new KeyStateHandler();
 
     constructor() {
@@ -9,7 +9,7 @@
             let keyCode: KeyCode = event.keyCode;
             if (this.key.isUp(keyCode)) {
                 this.key.press(keyCode);
-                this.handleActionList(this.keyDownMap[keyCode]);
+                this.handleActionList(this.keyPressMap[keyCode]);
             }
         });
         // give KEY RELEASE listener to document
@@ -17,7 +17,7 @@
             let keyCode: KeyCode = event.keyCode;
             if (!this.key.isUp(keyCode)) {
                 this.key.release(keyCode);
-                this.handleActionList(this.keyUpMap[keyCode]);
+                this.handleActionList(this.keyReleaseMap[keyCode]);
             }
         });
     }
@@ -30,8 +30,17 @@
         }
     }
 
-    public eventKeyDown(keyCode: KeyCode, action: Action): void {
-        let map: ActionListMap = this.keyDownMap;
+    public eventKeyPress(keyCode: KeyCode, action: Action): this {
+        EventBus.addEventAction(this.keyPressMap, keyCode, action);
+        return this;
+    }
+
+    public eventKeyRelease(keyCode: KeyCode, action: Action): this {
+        EventBus.addEventAction(this.keyReleaseMap, keyCode, action);
+        return this;
+    }
+
+    private static addEventAction(map: ActionListMap, keyCode: KeyCode, action:Action): void {
         if (!map[keyCode]) {
             map[keyCode] = [];
         }

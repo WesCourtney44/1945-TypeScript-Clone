@@ -1,37 +1,35 @@
 var Game1945 = (function () {
     function Game1945(canvas) {
-        var _this = this;
-        this.canvas = canvas;
+        this.eventBus = new EventBus();
         this.frames = 0;
         this.seconds = 0;
         this.clockSpeed = new UnitsPerSecond(1);
-        this.eventBus = new EventBus();
-        this.coords = { x: 64, y: 64 };
-        this.eventBus.eventKeyDown(KeyCode.UP_ARROW, function () {
-            _this.coords.y -= 4;
-        });
-        this.eventBus.eventKeyDown(KeyCode.DOWN_ARROW, function () {
-            _this.coords.y += 4;
-        });
+        this.canvas = canvas;
+        this.blockEntity = new TestBlockEntity(64, 64, this);
     }
+    Object.defineProperty(Game1945.prototype, "context", {
+        get: function () {
+            return this.canvas.getContext("2d");
+        },
+        enumerable: true,
+        configurable: true
+    });
     Game1945.prototype.onStart = function () { };
     Game1945.prototype.onStop = function () { };
     Game1945.prototype.step = function (delta) {
+        this.blockEntity.step(delta);
         this.frames++;
         this.seconds += this.clockSpeed.apply(delta);
     };
     Game1945.prototype.draw = function () {
-        var context = this.canvas.getContext("2d");
-        context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        context.beginPath();
-        context.arc(95, 50, 60, 0, 2 * Math.PI);
-        context.stroke();
-        var x = this.coords.x;
-        var y = this.coords.y;
-        context.fillRect(x, y, 64, 64);
-        context.fillText("Frames: " + this.frames, 48, 32);
-        context.fillText("Seconds: " + Math.floor(this.seconds), 48, 48);
-        context.fillText("FPS: " + Math.floor(this.frames / this.seconds), 48, 64);
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.blockEntity.draw();
+        this.context.beginPath();
+        this.context.arc(95, 50, 60, 0, 2 * Math.PI);
+        this.context.stroke();
+        this.context.fillText("Frames: " + this.frames, 48, 32);
+        this.context.fillText("Seconds: " + Math.floor(this.seconds), 48, 48);
+        this.context.fillText("FPS: " + Math.floor(this.frames / this.seconds), 48, 64);
     };
     return Game1945;
 }());
@@ -46,6 +44,71 @@ var Main = (function () {
     };
     return Main;
 }());
+var TestBlockEntity = (function () {
+    function TestBlockEntity(x, y, game) {
+        var _this = this;
+        this.width = 64;
+        this.height = 64;
+        this.speed = new UnitsPerSecond(64);
+        this.horizontal = "stopped";
+        this.vertical = "stopped";
+        this.x = x;
+        this.y = y;
+        this.game = game;
+        game.eventBus // method chaining
+            .eventKeyPress(KeyCode.UP_ARROW, function () {
+            _this.vertical = _this.vertical === "stopped" ? "up" : _this.vertical;
+        })
+            .eventKeyRelease(KeyCode.UP_ARROW, function () {
+            _this.vertical = _this.vertical === "up" ? "stopped" : _this.vertical;
+        })
+            .eventKeyPress(KeyCode.DOWN_ARROW, function () {
+            _this.vertical = _this.vertical === "stopped" ? "down" : _this.vertical;
+        })
+            .eventKeyRelease(KeyCode.DOWN_ARROW, function () {
+            _this.vertical = _this.vertical === "down" ? "stopped" : _this.vertical;
+        })
+            .eventKeyPress(KeyCode.RIGHT_ARROW, function () {
+            _this.horizontal = _this.horizontal === "stopped" ? "right" : _this.horizontal;
+        })
+            .eventKeyRelease(KeyCode.RIGHT_ARROW, function () {
+            _this.horizontal = _this.horizontal === "right" ? "stopped" : _this.horizontal;
+        })
+            .eventKeyPress(KeyCode.LEFT_ARROW, function () {
+            _this.horizontal = _this.horizontal === "stopped" ? "left" : _this.horizontal;
+        })
+            .eventKeyRelease(KeyCode.LEFT_ARROW, function () {
+            _this.horizontal = _this.horizontal === "left" ? "stopped" : _this.horizontal;
+        });
+    }
+    TestBlockEntity.prototype.step = function (delta) {
+        var calculatedSpeed = this.speed.apply(delta);
+        switch (this.horizontal) {
+            case "left":
+                this.x += -calculatedSpeed;
+                break;
+            case "right":
+                this.x += calculatedSpeed;
+                break;
+        }
+        switch (this.vertical) {
+            case "up":
+                this.y += -calculatedSpeed;
+                break;
+            case "down":
+                this.y += calculatedSpeed;
+                break;
+        }
+    };
+    TestBlockEntity.prototype.draw = function () {
+        var context = this.game.context;
+        var temp = context.fillStyle;
+        context.fillStyle = "red";
+        context.fillRect(this.x, this.y, this.width, this.height);
+        context.fillStyle = temp;
+    };
+    return TestBlockEntity;
+}());
 var Delta = (function () {
     function Delta(milliseconds) {
         this.milliseconds = milliseconds;
@@ -59,15 +122,15 @@ var Delta = (function () {
 var EventBus = (function () {
     function EventBus() {
         var _this = this;
-        this.keyDownMap = [];
-        this.keyUpMap = [];
+        this.keyPressMap = [];
+        this.keyReleaseMap = [];
         this.key = new KeyStateHandler();
         // give KEY PRESS listener to document
         document.addEventListener("keydown", function (event) {
             var keyCode = event.keyCode;
             if (_this.key.isUp(keyCode)) {
                 _this.key.press(keyCode);
-                _this.handleActionList(_this.keyDownMap[keyCode]);
+                _this.handleActionList(_this.keyPressMap[keyCode]);
             }
         });
         // give KEY RELEASE listener to document
@@ -75,7 +138,7 @@ var EventBus = (function () {
             var keyCode = event.keyCode;
             if (!_this.key.isUp(keyCode)) {
                 _this.key.release(keyCode);
-                _this.handleActionList(_this.keyUpMap[keyCode]);
+                _this.handleActionList(_this.keyReleaseMap[keyCode]);
             }
         });
     }
@@ -87,8 +150,15 @@ var EventBus = (function () {
             }
         }
     };
-    EventBus.prototype.eventKeyDown = function (keyCode, action) {
-        var map = this.keyDownMap;
+    EventBus.prototype.eventKeyPress = function (keyCode, action) {
+        EventBus.addEventAction(this.keyPressMap, keyCode, action);
+        return this;
+    };
+    EventBus.prototype.eventKeyRelease = function (keyCode, action) {
+        EventBus.addEventAction(this.keyReleaseMap, keyCode, action);
+        return this;
+    };
+    EventBus.addEventAction = function (map, keyCode, action) {
         if (!map[keyCode]) {
             map[keyCode] = [];
         }
