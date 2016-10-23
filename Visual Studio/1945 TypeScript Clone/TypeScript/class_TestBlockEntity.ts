@@ -4,7 +4,7 @@
     private readonly width: number = 64;
     private readonly height: number = 64;
     private readonly game: Game;
-    private readonly speed: UnitsPerSecond = new UnitsPerSecond(64);
+    private readonly speed: UnitsPerSecond = new UnitsPerSecond(120);
     private horizontal: "left" | "stopped" | "right" = "stopped";
     private vertical: "up" | "stopped" | "down" = "stopped";
 
