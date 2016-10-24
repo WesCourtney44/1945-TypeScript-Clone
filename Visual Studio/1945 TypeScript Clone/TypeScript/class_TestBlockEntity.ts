@@ -14,31 +14,31 @@
         this.game = game;
         game.eventBus // method chaining
             // UP ARROW
-            .eventKeyPress(KeyCode.UP_ARROW, () => {
+            .addKeyPressListener(KeyCode.UP_ARROW, () => {
                 this.vertical = this.vertical === "stopped" ? "up" : this.vertical;
             })
-            .eventKeyRelease(KeyCode.UP_ARROW, () => {
+            .addKeyReleaseListener(KeyCode.UP_ARROW, () => {
                 this.vertical = this.vertical === "up" ? "stopped" : this.vertical;
             })
             // DOWN ARROW
-            .eventKeyPress(KeyCode.DOWN_ARROW, () => {
+            .addKeyPressListener(KeyCode.DOWN_ARROW, () => {
                 this.vertical = this.vertical === "stopped" ? "down" : this.vertical;
             })
-            .eventKeyRelease(KeyCode.DOWN_ARROW, () => {
+            .addKeyReleaseListener(KeyCode.DOWN_ARROW, () => {
                 this.vertical = this.vertical === "down" ? "stopped" : this.vertical;
             })
             // RIGHT ARROW
-            .eventKeyPress(KeyCode.RIGHT_ARROW, () => {
+            .addKeyPressListener(KeyCode.RIGHT_ARROW, () => {
                 this.horizontal = this.horizontal === "stopped" ? "right" : this.horizontal;
             })
-            .eventKeyRelease(KeyCode.RIGHT_ARROW, () => {
+            .addKeyReleaseListener(KeyCode.RIGHT_ARROW, () => {
                 this.horizontal = this.horizontal === "right" ? "stopped" : this.horizontal;
             })
             // LEFt ARROW
-            .eventKeyPress(KeyCode.LEFT_ARROW, () => {
+            .addKeyPressListener(KeyCode.LEFT_ARROW, () => {
                 this.horizontal = this.horizontal === "stopped" ? "left" : this.horizontal;
             })
-            .eventKeyRelease(KeyCode.LEFT_ARROW, () => {
+            .addKeyReleaseListener(KeyCode.LEFT_ARROW, () => {
                 this.horizontal = this.horizontal === "left" ? "stopped" : this.horizontal;
             });
     }

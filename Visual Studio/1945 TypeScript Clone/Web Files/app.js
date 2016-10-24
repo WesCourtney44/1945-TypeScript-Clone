@@ -56,28 +56,28 @@ var TestBlockEntity = (function () {
         this.y = y;
         this.game = game;
         game.eventBus // method chaining
-            .eventKeyPress(KeyCode.UP_ARROW, function () {
+            .addKeyPressListener(KeyCode.UP_ARROW, function () {
             _this.vertical = _this.vertical === "stopped" ? "up" : _this.vertical;
         })
-            .eventKeyRelease(KeyCode.UP_ARROW, function () {
+            .addKeyReleaseListener(KeyCode.UP_ARROW, function () {
             _this.vertical = _this.vertical === "up" ? "stopped" : _this.vertical;
         })
-            .eventKeyPress(KeyCode.DOWN_ARROW, function () {
+            .addKeyPressListener(KeyCode.DOWN_ARROW, function () {
             _this.vertical = _this.vertical === "stopped" ? "down" : _this.vertical;
         })
-            .eventKeyRelease(KeyCode.DOWN_ARROW, function () {
+            .addKeyReleaseListener(KeyCode.DOWN_ARROW, function () {
             _this.vertical = _this.vertical === "down" ? "stopped" : _this.vertical;
         })
-            .eventKeyPress(KeyCode.RIGHT_ARROW, function () {
+            .addKeyPressListener(KeyCode.RIGHT_ARROW, function () {
             _this.horizontal = _this.horizontal === "stopped" ? "right" : _this.horizontal;
         })
-            .eventKeyRelease(KeyCode.RIGHT_ARROW, function () {
+            .addKeyReleaseListener(KeyCode.RIGHT_ARROW, function () {
             _this.horizontal = _this.horizontal === "right" ? "stopped" : _this.horizontal;
         })
-            .eventKeyPress(KeyCode.LEFT_ARROW, function () {
+            .addKeyPressListener(KeyCode.LEFT_ARROW, function () {
             _this.horizontal = _this.horizontal === "stopped" ? "left" : _this.horizontal;
         })
-            .eventKeyRelease(KeyCode.LEFT_ARROW, function () {
+            .addKeyReleaseListener(KeyCode.LEFT_ARROW, function () {
             _this.horizontal = _this.horizontal === "left" ? "stopped" : _this.horizontal;
         });
     }
@@ -130,7 +130,7 @@ var EventBus = (function () {
             var keyCode = event.keyCode;
             if (_this.key.isUp(keyCode)) {
                 _this.key.press(keyCode);
-                _this.handleActionList(_this.keyPressMap[keyCode]);
+                EventBus.runAllActionsIn(_this.keyPressMap[keyCode]);
             }
         });
         // give KEY RELEASE listener to document
@@ -138,11 +138,11 @@ var EventBus = (function () {
             var keyCode = event.keyCode;
             if (!_this.key.isUp(keyCode)) {
                 _this.key.release(keyCode);
-                _this.handleActionList(_this.keyReleaseMap[keyCode]);
+                EventBus.runAllActionsIn(_this.keyReleaseMap[keyCode]);
             }
         });
     }
-    EventBus.prototype.handleActionList = function (list) {
+    EventBus.runAllActionsIn = function (list) {
         if (list) {
             for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
                 var action = list_1[_i];
@@ -150,11 +150,11 @@ var EventBus = (function () {
             }
         }
     };
-    EventBus.prototype.eventKeyPress = function (keyCode, action) {
+    EventBus.prototype.addKeyPressListener = function (keyCode, action) {
         EventBus.addEventAction(this.keyPressMap, keyCode, action);
         return this;
     };
-    EventBus.prototype.eventKeyRelease = function (keyCode, action) {
+    EventBus.prototype.addKeyReleaseListener = function (keyCode, action) {
         EventBus.addEventAction(this.keyReleaseMap, keyCode, action);
         return this;
     };

@@ -9,7 +9,7 @@
             let keyCode: KeyCode = event.keyCode;
             if (this.key.isUp(keyCode)) {
                 this.key.press(keyCode);
-                this.handleActionList(this.keyPressMap[keyCode]);
+                EventBus.runAllActionsIn(this.keyPressMap[keyCode]);
             }
         });
         // give KEY RELEASE listener to document
@@ -17,12 +17,12 @@
             let keyCode: KeyCode = event.keyCode;
             if (!this.key.isUp(keyCode)) {
                 this.key.release(keyCode);
-                this.handleActionList(this.keyReleaseMap[keyCode]);
+                EventBus.runAllActionsIn(this.keyReleaseMap[keyCode]);
             }
         });
     }
 
-    private handleActionList(list?: ActionList): void {
+    private static runAllActionsIn(list?: ActionList): void {
         if (list) {
             for (let action of list) {
                 action();
@@ -30,12 +30,12 @@
         }
     }
 
-    public eventKeyPress(keyCode: KeyCode, action: Action): this {
+    public addKeyPressListener(keyCode: KeyCode, action: Action): this {
         EventBus.addEventAction(this.keyPressMap, keyCode, action);
         return this;
     }
 
-    public eventKeyRelease(keyCode: KeyCode, action: Action): this {
+    public addKeyReleaseListener(keyCode: KeyCode, action: Action): this {
         EventBus.addEventAction(this.keyReleaseMap, keyCode, action);
         return this;
     }
