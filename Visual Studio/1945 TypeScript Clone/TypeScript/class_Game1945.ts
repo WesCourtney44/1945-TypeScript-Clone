@@ -8,7 +8,7 @@
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
-        this.blockEntity = new TestBlockEntity(64, 64, this);
+        this.blockEntity = new TestBlock.BlockEntity(64, 64, this);
     }
 
     public get context(): CanvasRenderingContext2D {
